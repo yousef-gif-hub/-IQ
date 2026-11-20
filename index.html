@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مختبر الذكاء والتحدي | 10 أسئلة وتقدير IQ</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --muted: #64748b;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --accent: #7c3aed;
+        }
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 660px;
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            margin-bottom: 18px;
+        }
+        header { text-align: center; margin-bottom: 18px; }
+        header h1 { color: var(--primary); margin: 0 0 8px 0; font-size: 1.75rem; }
+        header p { color: var(--muted); margin: 0; font-size: 0.95rem; }
+        .ad-slot {
+            width: 100%;
+            max-width: 660px;
+            min-height: 85px;
+            background: #e2e8f0;
+            border: 2px dashed #94a3b8;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #475569;
+            font-size: 0.88rem;
+            margin: 12px 0;
+            text-align: center;
+            padding: 10px;
+        }
+        .hidden { display: none; }
+        .info-box {
+            background: #eff6ff;
+            border-right: 4px solid var(--primary);
+            padding: 14px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .progress {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+        }
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 18px;
+            line-height: 1.55;
+        }
+        .options { display: grid; gap: 10px; }
+        .option-btn {
+            padding: 13px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            background: #fff;
+            text-align: right;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: var(--text);
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #f1f5f9; }
+        .option-btn.correct { background: #dcfce7; border-color: var(--success); color: var(--success); font-weight: bold; }
+        .option-btn.wrong { background: #fee2e2; border-color: var(--danger); color: var(--danger); }
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 13px 20px;
+            border-radius: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 14px;
+            width: 100%;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn:hover { background: var(--primary-dark); }
+        .btn-share { background: var(--success); }
+        .btn-share:hover { background: #15803d; }
+        .result-box { text-align: center; }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 18px 0;
+        }
+        .stat-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+        }
+        .stat-label { font-size: 0.85rem; color: var(--muted); margin-bottom: 6px; }
+        .stat-value { font-size: 1.6rem; font-weight: bold; color: var(--primary); }
+        .stat-value.iq { color: var(--accent); }
+        .disclaimer { font-size: 0.78rem; color: var(--muted); margin-top: 14px; }
+    </style>
+</head>
+<body>
+    <!-- إعلان علوي -->
+    <div class="ad-slot" id="ad-top">
+        [مكان كود الإعلان العلوي]
+    </div>
+    <div class="container">
+        <header>
+            <h1>🧠 تحدي الذكاء والمعلومات</h1>
+            <p>أجب عن 10 أسئلة واكتشف نتيجتك ومؤشر ذكائك التقديري</p>
+        </header>
+        <!-- شاشة البداية -->
+        <div id="home-screen">
+            <div class="info-box">
+                • سيظهر لك في كل جولة <strong>10 أسئلة مختارة</strong> من بنك أسئلة متنوع.<br>
+                • في النهاية ستحصل على <strong>نتيجتك</strong> و<strong>معدل IQ تقديري</strong>.<br>
+                • يمكنك إعادة اللعب والحصول على مجموعة جديدة من الأسئلة في أي وقت!
+            </div>
+            <button class="btn" onclick="startQuiz()">ابدأ التحدي الآن (10 أسئلة) 🚀</button>
+        </div>
+        <!-- شاشة الأسئلة -->
+        <div id="quiz-screen" class="hidden">
+            <div class="progress">
+                <span id="question-counter"></span>
+                <span id="current-score-badge">النقاط: 0</span>
+            </div>
+            <div class="question-text" id="question-text"></div>
+            <div class="options" id="options-container"></div>
+            <!-- إعلان وسط الأسئلة -->
+            <div class="ad-slot" id="ad-middle">
+                [مكان كود الإعلان الأوسط]
+            </div>
+            <button class="btn hidden" id="next-btn" onclick="nextQuestion()">السؤال التالي ⬅️</button>
+        </div>
+        <!-- شاشة النتيجة -->
+        <div id="result-screen" class="hidden result-box">
+            <h2>اكتمل التحدي! 🎉</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">نتيجتك</div>
+                    <div class="stat-value" id="final-score">0/10</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">مؤشر IQ التقديري</div>
+                    <div class="stat-value iq" id="iq-value">100</div>
+                </div>
+            </div>
+            <p id="result-message" style="font-size: 1.05rem; font-weight: bold; margin-bottom: 12px;"></p>
+            <!-- إعلان صفحة النتيجة -->
+            <div class="ad-slot" id="ad-result">
+                [مكان كود الإعلان في صفحة النتيجة]
+            </div>
+            <button class="btn btn-share" onclick="shareResult()">شارك نتيجتك وتحدّ أصدقاءك 📲</button>
+            <button class="btn" onclick="startQuiz()">لعب جولة جديدة بأسئلة مختلفة 🔄</button>
+            <p class="disclaimer">* ملاحظة: مؤشر IQ المعروض هو تقدير ترفيهي مبني على أدائك في هذا الاختبار وليس اختباراً نفسياً رسمياً.</p>
+        </div>
+    </div>
+    <script>
+        // بنك الأسئلة (30 سؤالاً متنوعاً)
+        const questionBank = [
+            // ذكاء ومنطق
+            { q: "ما هو الرقم التالي في المتتابعة: 2 ، 6 ، 12 ، 20 ، 30 ، ؟", options: ["36", "40", "42", "48"], answer: 2 },
+            { q: "إذا كان اليوم هو الثلاثاء، فما هو اليوم بعد 100 يوم؟", options: ["الخميس", "الجمعة", "السبت", "الأحد"], answer: 0 },
+            { q: "ما الشيء الذي كلما أخذت منه كبر؟", options: ["الحفرة", "الظل", "العمر", "الرصيد"], answer: 0 },
+            { q: "أب لديه 5 بنات ولكل بنت أخ واحد، فكم عدد أبناء هذا الأب؟", options: ["5 أبناء", "6 أبناء", "10 أبناء", "11 ابناً"], answer: 1 },
+            { q: "ما هو الرقم الذي إذا ضربته بنفسه ثم أضفت 9 يصبح الناتج 34؟", options: ["4", "5", "6", "7"], answer: 1 },
+            { q: "شخص يقف في طابور، ترتيبه الرابع من الأمام والسادس من الخلف، فكم عدد الأشخاص في الطابور؟", options: ["8", "9", "10", "11"], answer: 1 },
+            { q: "ما هو الشيء الذي يمشي بلا أرجل ويبكي بلا عيون؟", options: ["الريح", "السحاب", "النهر", "الوقت"], answer: 1 },
+            { q: "إذا كانت 3 قطط تصطاد 3 فئران في 3 دقائق، فكم دقيقة تحتاج 100 قطة لاصطياد 100 فأر؟", options: ["100 دقيقة", "30 دقيقة", "3 دقائق", "1 دقيقة"], answer: 2 },
+            { q: "أي كلمة تختلف عن البقية؟", options: ["تفاحة", "موزة", "بطاطا", "برتقالة"], answer: 2 },
+            { q: "ما هو الرقم الذي يقبل القسمة على 2 و3 و5 في الوقت نفسه؟", options: ["15", "20", "30", "45"], answer: 2 },
+            // ثقافة عامة وجغرافيا
+            { q: "ما هي عاصمة اليابان؟", options: ["سيول", "طوكيو", "كيوتو", "أوساكا"], answer: 1 },
+            { q: "ما هو أكبر محيط في العالم؟", options: ["المحيط الأطلسي", "المحيط الهندي", "المحيط الهادئ", "المحيط المتجمد"], answer: 2 },
+            { q: "ما هي أطول سلسلة جبلية فوق سطح الأرض؟", options: ["جبال الهيمالايا", "جبال الأنديز", "جبال الروكي", "جبال الألب"], answer: 1 },
+            { q: "ما هي الدولة العربية الأكثر سكاناً؟", options: ["السعودية", "الجزائر", "مصر", "العراق"], answer: 2 },
+            { q: "ما هو أعمق خندق بحري في العالم؟", options: ["خندق ماريانا", "خندق بورتوريكو", "خندق جاوة", "خندق تونغا"], answer: 0 },
+            { q: "كم عدد قارات العالم؟", options: ["5 قارات", "6 قارات", "7 قارات", "8 قارات"], answer: 2 },
+            { q: "ما هي العملة الرسمية لدولة بريطانيا؟", options: ["اليورو", "الدولار", "الجنيه الإسترليني", "الفرنك"], answer: 2 },
+            { q: "في أي قارة تقع البرازيل؟", options: ["أفريقيا", "أمريكا الجنوبية", "أمريكا الشمالية", "أوروبا"], answer: 1 },
+            { q: "ما هو أكبر بلد في العالم من حيث المساحة؟", options: ["كندا", "الصين", "الولايات المتحدة", "روسيا"], answer: 3 },
+            { q: "أي بحر يفصل بين أوروبا وأفريقيا؟", options: ["البحر الأحمر", "البحر الأبيض المتوسط", "البحر الأسود", "بحر قزوين"], answer: 1 },
+            // علوم وتاريخ ومعلومات عامة
+            { q: "ما هو الكوكب الأقرب إلى الشمس؟", options: ["الزهرة", "عطارد", "المريخ", "الأرض"], answer: 1 },
+            { q: "ما هو الغاز الأكثر وفرة في الغلاف الجوي للأرض؟", options: ["الأكسجين", "ثاني أكسيد الكربون", "النيتروجين", "الهيدروجين"], answer: 2 },
+            { q: "كم عدد عظام جسم الإنسان البالغ تقريباً؟", options: ["186 عظمة", "206 عظمة", "226 عظمة", "246 عظمة"], answer: 1 },
+            { q: "ما هو أسرع حيوان بري في العالم؟", options: ["الفهد الصياد", "الأسد", "الغزال", "النمر"], answer: 0 },
+            { q: "من هو مخترع المصباح الكهربائي العملي؟", options: ["نيكولا تسلا", "توماس إديسون", "غراهام بيل", "مايكل فاراداي"], answer: 1 },
+            { q: "كم ثانية في الساعة الواحدة؟", options: ["600 ثانية", "1800 ثانية", "3600 ثانية", "7200 ثانية"], answer: 2 },
+            { q: "ما هو المعدن السائل في درجة حرارة الغرفة العادية؟", options: ["الرصاص", "الزئبق", "النحاس", "القصدير"], answer: 1 },
+            { q: "ما هو العضو المسؤول عن ضخ الدم في جسم الإنسان؟", options: ["الرئة", "الكبد", "القلب", "الكلى"], answer: 2 },
+            { q: "كم عدد أيام السنة الكبيسة؟", options: ["364 يوماً", "365 يوماً", "366 يوماً", "367 يوماً"], answer: 2 },
+            { q: "ما هو أكبر كوكب في المجموعة الشمسية؟", options: ["زحل", "المشتري", "أورانوس", "نبتون"], answer: 1 }
+        ];
+        const QUESTIONS_PER_ROUND = 10;
+        let roundQuestions = [];
+        let currentIndex = 0;
+        let score = 0;
+        let lastIQ = 100;
+        function shuffleArray(arr) {
+            const copy = [...arr];
+            for (let i = copy.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [copy[i], copy[j]] = [copy[j], copy[i]];
+            }
+            return copy;
+        }
+        function startQuiz() {
+            roundQuestions = shuffleArray(questionBank).slice(0, QUESTIONS_PER_ROUND);
+            currentIndex = 0;
+            score = 0;
+            document.getElementById('home-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.add('hidden');
+            document.getElementById('quiz-screen').classList.remove('hidden');
+            updateScoreBadge();
+            showQuestion();
+        }
+        function updateScoreBadge() {
+            document.getElementById('current-score-badge').innerText = `النقاط: ${score}`;
+        }
+        function showQuestion() {
+            const qData = roundQuestions[currentIndex];
+            document.getElementById('question-counter').innerText = `السؤال ${currentIndex + 1} من ${QUESTIONS_PER_ROUND}`;
+            document.getElementById('question-text').innerText = qData.q;
+            document.getElementById('next-btn').classList.add('hidden');
+            const optionsDiv = document.getElementById('options-container');
+            optionsDiv.innerHTML = '';
+            qData.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => selectAnswer(btn, idx, qData.answer);
+                optionsDiv.appendChild(btn);
+            });
+        }
+        function selectAnswer(selectedBtn, selectedIdx, correctIdx) {
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.disabled = true);
+            if (selectedIdx === correctIdx) {
+                selectedBtn.classList.add('correct');
+                score++;
+                updateScoreBadge();
+            } else {
+                selectedBtn.classList.add('wrong');
+                allBtns[correctIdx].classList.add('correct');
+            }
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.innerText = (currentIndex === QUESTIONS_PER_ROUND - 1) ? "عرض النتيجة ومؤشر IQ 🏆" : "السؤال التالي ⬅️";
+            nextBtn.classList.remove('hidden');
+        }
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < QUESTIONS_PER_ROUND) {
+                showQuestion();
+            } else {
+                showResult();
+            }
+        }
+        function calculateIQ(correctCount, totalCount) {
+            // تقدير ترفيهي يتراوح تقريباً بين 80 و 140
+            const ratio = correctCount / totalCount;
+            return Math.round(80 + (ratio * 60));
+        }
+        function showResult() {
+            document.getElementById('quiz-screen').classList.add('hidden');
+            document.getElementById('result-screen').classList.remove('hidden');
+            lastIQ = calculateIQ(score, QUESTIONS_PER_ROUND);
+            document.getElementById('final-score').innerText = `${score}/${QUESTIONS_PER_ROUND}`;
+            document.getElementById('iq-value').innerText = lastIQ;
+            let msg = "";
+            if (score >= 9) msg = "ذكاء استثنائي وسرعة بديهة مذهلة! 🌟";
+            else if (score >= 7) msg = "أداء ممتاز جداً! ثقافتك وتركيزك عاليان 👏";
+            else if (score >= 5) msg = "نتيجة جيدة، ويمكنك رفع مستواك في الجولة القادمة 💪";
+            else msg = "بداية طيبة! جرّب جولة أخرى بأسلوب أكثر تركيزاً 🎯";
+            document.getElementById('result-message').innerText = msg;
+        }
+        function shareResult() {
+            const text = `حصلت على ${score}/${QUESTIONS_PER_ROUND} ومؤشر IQ تقديري ${lastIQ} في تحدي الذكاء 🧠 هل تتفوق عليّ؟`;
+            const url = window.location.href;
+            if (navigator.share) {
+                navigator.share({ title: document.title, text: text, url: url });
+            } else {
+                const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`;
+                window.open(whatsappUrl, "_blank");
+            }
+        }
+    </script>
+</body>
+</html>
